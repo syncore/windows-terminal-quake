@@ -67,13 +67,23 @@ namespace WindowsTerminalQuake
 			};
 
 			// Start hidden?
-			if (Settings.Instance.StartHidden) Toggle(isOpen = false, 0);
+			if (Settings.Instance.StartHidden)
+			{
+				Toggle(!isOpen, 0);
+				isOpen = false;
+			}
+			else
+			{
+				Toggle(isOpen, 0);
+				isOpen = true;
+			}
 		}
 
 		public void Toggle(bool open, int durationMs)
 		{
-			var stepDelayMs = Settings.Instance.ToggleAnimationFrameTimeMs;
+			var stepDelayMs = Settings.Instance.ToggleAnimationFrameTimeMs == 0 ? 15 : Settings.Instance.ToggleAnimationFrameTimeMs;
 			var stepCount = durationMs / stepDelayMs;
+			if (stepCount <= 0) stepCount = 1;
 
 			var screen = GetScreenWithCursor();
 
